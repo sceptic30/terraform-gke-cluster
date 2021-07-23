@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: longhorn-backup
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: longhorn-nfs-backup
+  namespace: longhorn-backup
+  labels:
+    app: longhorn-nfs-backup
+spec:
+  volumes:
+  - name: nfs-volume
+    emptyDir: {}
+  containers:
+  - name: longhorn-nfs-backup-container
+    image: janeczku/nfs-ganesha:latest
+    imagePullPolicy: Always
+    env:
+    - name: EXPORT_ID
+      value: "14"
+    - name: EXPORT_PATH
+      value: /opt/backupstore
+    - name: PSEUDO_PATH
+      value: /opt/backupstore
+    command: ["bash", "-c", "chmod 700 /opt/backupstore && /opt/start_nfs.sh | tee /var/log/ganesha.log"]
+    securityContext:
+      privileged: true
+      capabilities:
+        add: ["SYS_ADMIN", "DAC_READ_SEARCH"]
+    volumeMounts:
+    - name: nfs-volume
+      mountPath: "/opt/backupstore"
+    livenessProbe:
+      exec:
+        command: ["bash", "-c", "grep \"No export entries found\" /var/log/ganesha.log > /dev/null 2>&1 ; [ $? -ne 0 ]"]
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+      limits:
+        memory: "96Mi"
+        cpu: "150m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: longhorn-nfs-backup-svc
+  namespace: longhorn-backup
+spec:
+  selector:
+    app: longhorn-nfs-backup
+  clusterIP: None
+  ports:
+  - name: notnecessary
+    port: 1234
+    targetPort: 1234

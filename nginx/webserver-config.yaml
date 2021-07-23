@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: webserver-config
+  namespace: production
+data:
+  nginx-http.conf: |-
+    server {
+        server_name www.example.com;
+        listen 3080;
+        listen [::]:3080;
+        return 301 https://example.com$request_uri;
+    }
+    server {
+        server_name example.com;
+        listen 3080;
+        listen [::]:3080;
+        root /var/www/html;
+        charset UTF-8;
+
+        #access_log  logs/host.access.log  main;
+        location ~ /.well-known/acme-challenge/ {
+          allow all;
+          root /var/www/html;
+          default_type "text/plain";
+        }
+
+        location @extensionless-php {
+            rewrite ^(.*)/$ $1.php last;
+            rewrite ^([^.]*[^/])$ $1/ permanent;
+        }
+            if ($request_uri ~* "^(.*/)index\.php$") {
+                    return 301 $1;
+            }
+        location / {
+            try_files $uri $uri/ @extensionless-php;
+            #limit_conn num_conn 15;
+            #limit_req zone=num_reqs;
+           }
+        error_page  404    /404.php;
+
+        #pass the PHP scripts to FastCGI server listening on php-fpm unix socket
+        #location ~ \.php$ {
+        #include fastcgi_config;
+        #}
+
+        location ~ /\.ht {
+            deny  all;
+            return 403;
+        }
+
+        location ~ \.(gif|ico|jpg|png|svg|js|css|htm|html|mp3|mp4|wav|ogg|avi|ttf|eot|woff|woff2|json)$ {
+            allow all;
+            ## Cache images,CSS,JS and webfonts for an hour
+            ## Increasing the duration may improve the load-time, but may cause old files to show after an Matomo upgrade
+            expires 1h;
+            add_header Pragma public;
+            add_header Cache-Control "public";
+        }
+    #=====START phpMyAdmin==============#
+    #include snippets/phpmyadmin.conf;
+    #include redirects.conf;
+    }
+  nginx.conf: |-
+    worker_processes  1;
+    error_log  /var/log/nginx/error.log error;
+    pid        /var/run/nginx.pid;
+    load_module /etc/nginx/modules/ngx_http_geoip2_module.so; # GeoIP2
+    load_module /etc/nginx/modules/ngx_rtmp_module.so;
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        map_hash_max_size 256;
+        map_hash_bucket_size 256;
+        types_hash_bucket_size 256;
+        server_names_hash_bucket_size 256;
+        sendfile    on;
+        tcp_nodelay on;
+        tcp_nopush  on;
+        autoindex off;
+        server_tokens off;
+        keepalive_timeout  15;
+        client_max_body_size 100m;
+
+        map $http_upgrade $connection_upgrade {
+            default upgrade;
+            '' close;
+        }
+        map $http_host $blogid {
+        default 0;
+        #include /var/www/html/wp-content/uploads/nginx-helper/map.conf;
+        }
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                          '$status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" "$http_x_forwarded_for"';
+       # GeoIP2
+        log_format  main_geo  '$remote_addr - $remote_user [$time_local] "$request" '
+                              '$status $body_bytes_sent "$http_referer" '
+                              '"$http_user_agent" "$http_x_forwarded_for" '
+                              '$geoip2_data_country_iso $geoip2_data_country_name';
+
+        access_log  /var/log/nginx/access.log  main_geo; # GeoIP2
+        #include blockips.conf;
+        geoip2 /usr/share/geoip/GeoLite2-Country.mmdb {
+            $geoip2_metadata_country_build  metadata build_epoch;
+            $geoip2_data_country_geonameid  country geoname_id;
+            $geoip2_data_country_iso        country iso_code;
+            $geoip2_data_country_name       country names en;
+            $geoip2_data_country_is_eu      country is_in_european_union;
+        }
+        #geoip2 /usr/share/geoip/GeoLite2-City.mmdb {
+        #   $geoip2_data_city_name city names en;
+        #   $geoip2_data_city_geonameid city geoname_id;
+        #   $geoip2_data_continent_code continent code;
+        #   $geoip2_data_continent_geonameid continent geoname_id;
+        #   $geoip2_data_continent_name continent names en;
+        #   $geoip2_data_location_accuracyradius location accuracy_radius;
+        #   $geoip2_data_location_latitude location latitude;
+        #   $geoip2_data_location_longitude location longitude;
+        #   $geoip2_data_location_metrocode location metro_code;
+        #   $geoip2_data_location_timezone location time_zone;
+        #   $geoip2_data_postal_code postal code;
+        #   $geoip2_data_rcountry_geonameid registered_country geoname_id;
+        #   $geoip2_data_rcountry_iso registered_country iso_code;
+        #   $geoip2_data_rcountry_name registered_country names en;
+        #   $geoip2_data_rcountry_is_eu registered_country is_in_european_union;
+        #   $geoip2_data_region_geonameid subdivisions 0 geoname_id;
+        #   $geoip2_data_region_iso subdivisions 0 iso_code;
+        #   $geoip2_data_region_name subdivisions 0 names en;
+       #}
+        #=====================Basic Compression=====================
+        gzip on;
+        gzip_static on;
+        gzip_disable "msie6";
+        gzip_vary on;
+        gzip_proxied any;
+        gzip_comp_level 6;
+        gzip_buffers 16 8k;
+        gzip_http_version 1.1;
+        gzip_types text/css text/xml text/plain application/javascript image/jpeg image/png image/gif image/x-icon image/svg+xml image/webp application/font-woff application/json application/vnd.ms-fontobject application/vnd.ms-powerpoint;
+        #===Virtual Host Configs======
+        include /etc/nginx/conf.d/nginx-http.conf;
+    }

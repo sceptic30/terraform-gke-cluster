@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    helm.sh/chart: haproxy-ingress-0.12.5
+    app.kubernetes.io/name: haproxy-ingress
+    app.kubernetes.io/instance: haproxy-ingress
+    app.kubernetes.io/version: "v0.12.5"
+    app.kubernetes.io/managed-by: Helm
+  name: haproxy-ingress
+  namespace: haproxy-ingress
+data:
+  healthz-port: "10253"
+  stats-port: "1936"

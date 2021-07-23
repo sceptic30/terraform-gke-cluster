@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: netdata-rooter
+  namespace: netdata
+  labels:
+    app: netdata
+    chart: netdata-3.6.12
+    release: netdata
+    heritage: Helm
+  annotations:
+    app.kubernetes.io/managed-by: Helm
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/auth-realm: Authentication Required
+    ingress.kubernetes.io/auth-secret: netdata-basic-auth
+    ingress.kubernetes.io/auth-type: basic
+    kubernetes.io/ingress.class: haproxy
+    meta.helm.sh/release-name: netdata
+    meta.helm.sh/release-namespace: netdata
+spec:
+  tls:
+    - hosts:
+      - netdata.example.com
+      secretName: netdata-tls-secret
+  rules:
+    - host: netdata.example.com
+      http:
+        paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: netdata
+              port:
+                number: 19999

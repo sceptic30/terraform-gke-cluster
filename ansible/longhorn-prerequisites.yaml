@@ -1,0 +1,40 @@
+---
+- hosts: kubernetes-nodes
+  vars_files:
+    - vars/gke.yaml
+  become: true
+  
+  tasks:
+  - name: Creating Docker.Service.D
+    file:
+      path: /etc/systemd/system/docker.service.d
+      state: directory
+
+  - name: Creating mount_propagation_flags.conf
+    copy:
+      dest: "/etc/systemd/system/docker.service.d/mount_propagation_flags.conf"
+      content: |
+        [Service]
+        MountFlags=shared
+
+  - name: Reloading Docker Daemon
+    shell:
+      cmd: |
+        systemctl daemon-reload
+        systemctl restart docker.service
+
+  - name: Formatting disks
+    command: mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/sdb
+
+  - name: Creating Directory Mountpoint
+    file:
+      path: /mnt/{{ mount_point_name }}
+      state: directory
+
+  - name: Mount External Disk to Mountpoint
+    mount:
+      path:  /mnt/{{ mount_point_name }}
+      src:  /dev/sdb 
+      fstype: ext4
+      opts: discard,defaults
+      state: mounted
