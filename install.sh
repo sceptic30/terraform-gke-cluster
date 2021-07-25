@@ -59,6 +59,8 @@ sleep 1;
 sed -i "s/example.com/$BASE_DOMAIN/g" nginx/ingress-router.yaml
 sleep 1;
 sed -i "s/example.com/$BASE_DOMAIN/g" nginx/webserver-config.yaml
+sleep 1;
+sed -i "s/example.com/$BASE_DOMAIN/g" jenkins/ingress-router.yaml
 
 echo -e "${GREEN}Applying Provided Email Address To Cluster Issuers${ENDCOLOR}"
 sed -i "s/user@example.com/$CLUSTER_ADMIN_EMAIL/g" certmanager/production-issuer.yaml
@@ -146,3 +148,10 @@ kubectl apply -f nginx/ingress-router.yaml
 echo -e "${GREEN}Uploading Demo HTML Content For Nginx To Serve${ENDCOLOR}"
 cd nginx/html_public && tar -cf - * | kubectl exec -i -n production nginx-0 -- tar xf - -C /var/www/html
 cd ../../
+echo -e "${GREEN}Installing Jenkins CI/CD Server${ENDCOLOR}"
+kubectl create ns jenkins
+kubectl apply -f jenkins/rbac.yaml
+kubectl apply -f jenkins/service.yaml
+kubectl apply -f jenkins/statefulset.yaml
+kubectl wait --for=condition=Ready pod/jenkins-master-0 -n jenkins --timeout=300s
+kubectl apply -f jenkins/ingress-router.yaml

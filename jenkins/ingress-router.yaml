@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-router
+  namespace: jenkins
+  labels:
+    app: jenkins
+  annotations:
+    kubernetes.io/ingress.class: "haproxy"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - jenkins.example.com
+    secretName: jenkins-tls
+  rules:
+  - host: jenkins.example.com
+    http:
+      paths:
+      - pathType: ImplementationSpecific
+        path: "/"
+        backend:
+          service:
+            name: jenkins
+            port: 
+              number: 8080
