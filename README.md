@@ -5,23 +5,25 @@ This project autoprovisioning a full regional cluster in Google Kubernetes Engin
 A bash script lifting the weight of creating the appropriate commands by creating persistent disks in each zone, and automatically attaching these disks to each Kubernetes Node, while Ansible takes care of mounting the disks to a specified location at each node. After all revelant installations finish, you will be promped via command line to create a Username and a Password for securing the UI of Longhorn and Netdata, and will be submitted to Kubernetes API as secrets.
 
 Lastly, your kubernetes nodes will be automatically claimed, and you will have immediate access to all metrics.
+## Programming Language Used
+1. __Bash__
 ## DevOps Tooling Used
-1. Bash scripting.
-2. Terraform.
-3. Ansible.
+1. __Terraform__ (*Infrastructure Provisioning Tool*)
+2. __Ansible__ (*Configuration Management Tool*)
+3. __Jenkins__ (*Continuous Integration- Continuous Deployment Automation Server*)
+4. __NetData__ (*Health Monitoring - Observability Tool*)
 
 ## In-Cluster Technologies Used
 
 There is a number of technologies used such as:
-1. CertManager
-2. External DNS
-3. Haproxy Ingress Controller
-4. Longhorn Distrubuted Storage Platform
-5. NetData Monitoring-Observability Software
-6. Nginx
+1. __CertManager__
+2. __External-DNS__
+3. __Haproxy Ingress Controller__
+4. __Longhorn Distrubuted Storage Platform__
+5. __Nginx__
 
 ## Usage
-First, download clone the repository, and make give to install.sh and initiate.sh, appy then appropriate permissions and generate and public-private key pair:
+First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and public-private key pair as exactly show below:
 
 ```
 git clone https://github.com/sceptic30/terraform-gke-cluster.git
@@ -44,4 +46,4 @@ source initiate.sh
 ```
 
 ## Cluster Requirements
-The recommended cpu-memory requirements is 4 cores with 4Gb of Ram.
+The recommended cpu-memory requirements is 4 cores with 4Gb of Ram per node.
