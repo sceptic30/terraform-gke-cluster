@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: admintuts/nginx:1.21.0-rtmp-geoip2-alpine
+          image: admintuts/nginx:1.21.1-rtmp-geoip2-alpine
           ports:
           - containerPort: 3080
             name: nginx-http
