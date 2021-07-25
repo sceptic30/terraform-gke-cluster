@@ -6,21 +6,21 @@ A bash script lifting the weight of creating the appropriate commands by creatin
 
 Lastly, your kubernetes nodes will be automatically claimed, and you will have immediate access to all metrics.
 ## Programming Language Used
-1. __Bash__
+1. <ins>Bash</ins>
 ## DevOps Tooling Used
-1. __Terraform__ (*Infrastructure Provisioning Tool*)
-2. __Ansible__ (*Configuration Management Tool*)
-3. __Jenkins__ (*Continuous Integration- Continuous Deployment Automation Server*)
-4. __NetData__ (*Health Monitoring - Observability Tool*)
+1. <ins>Terraform</ins> (*Infrastructure Provisioning Tool*)
+2. <ins>Ansible</ins> (*Configuration Management Tool*)
+3. <ins>Jenkins</ins> (*Continuous Integration- Continuous Deployment Automation Server*)
+4. <ins>NetData</ins> (*Health Monitoring - Observability Tool*)
 
 ## In-Cluster Technologies Used
 
 There is a number of technologies used such as:
-1. __CertManager__
-2. __External-DNS__
-3. __Haproxy Ingress Controller__
-4. __Longhorn Distrubuted Storage Platform__
-5. __Nginx__
+1. <ins>CertManager</ins>
+2. <ins>External-DNS</ins>
+3. <ins>Haproxy Ingress Controller</ins>
+4. <ins>Longhorn Distrubuted Storage Platform</ins>
+5. <ins>Nginx</ins>
 
 ## Usage
 First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and public-private key pair as exactly show below:
