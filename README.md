@@ -10,7 +10,7 @@ Lastly, your kubernetes nodes will be automatically claimed, and you will have i
 ## DevOps Tooling Used
 1. <ins>Terraform</ins> (*Infrastructure Provisioning Tool*)
 2. <ins>Ansible</ins> (*Configuration Management Tool*)
-3. <ins>Jenkins</ins> (*Continuous Integration- Continuous Deployment Automation Server*)
+3. <ins>Jenkins</ins> (*Continuous Integration - Continuous Deployment Automation Server*)
 4. <ins>NetData</ins> (*Health Monitoring - Observability Tool*)
 
 ## In-Cluster Technologies Used
@@ -23,7 +23,7 @@ There is a number of technologies used such as:
 5. <ins>Nginx</ins>
 
 ## Usage
-First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and public-private key pair as exactly show below:
+First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and <ins>public-private key pair</ins> as exactly show below:
 
 ```
 git clone https://github.com/sceptic30/terraform-gke-cluster.git
@@ -46,4 +46,4 @@ source initiate.sh
 ```
 
 ## Cluster Requirements
-The recommended cpu-memory requirements is 4 cores with 4Gb of Ram per node.
+The recommended cpu-memory requirements is <ins>4 cores with 4Gb of RAM per node<ins>.
