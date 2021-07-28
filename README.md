@@ -45,5 +45,8 @@ And run the installation script:
 source initiate.sh
 ```
 
+## Demo
+Watch the whole process of provisioning in the [Demo Video](https://www.youtube.com/watch?v=0KWD3peHjfw "Provisioning a Google Kunernetes Cluster") on Youtube.
+
 ## Cluster Requirements
 The recommended cpu-memory requirements is <ins>4 cores with 4Gb of RAM per node<ins>.
