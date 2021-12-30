@@ -8,3 +8,4 @@ terraform.tfstate.backup
 kubeconfig-*
 external-dns-credentials.json
 keys/*
+.vscode/*.json
