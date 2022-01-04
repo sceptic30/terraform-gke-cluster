@@ -8,28 +8,28 @@ Lastly, your kubernetes nodes will be automatically claimed, and you will have i
 
 ## Programming Language Used
 
-1. \underline{Bash}
+1. Bash
 
 ## DevOps Tooling Used
 
-1. \underline{Terraform} (*Infrastructure Provisioning Tool*)
-2. \underline{Ansible} (*Configuration Management Tool*)
-3. \underline{Jenkins} (*Continuous Integration - Continuous Deployment Automation Server*)
-4. \underline{NetData} (*Health Monitoring - Observability Tool*)
+1. Terraform (*Infrastructure Provisioning Tool*)
+2. Ansible (*Configuration Management Tool*)
+3. Jenkins (*Continuous Integration - Continuous Deployment Automation Server*)
+4. NetData (*Health Monitoring - Observability Tool*)
 
 ## In-Cluster Technologies Used
 
 There is a number of technologies used such as:
 
-1. \underline{CertManager}
-2. \underline{External-DNS}
-3. \underline{Haproxy Ingress Controller}
-4. \underline{Longhorn Distrubuted Storage Platform}
-5. \underline{Nginx}
+1. CertManager
+2. External-DNS
+3. Haproxy Ingress Controller
+4. Longhorn Distrubuted Storage Platform
+5. Nginx
 
 ## Usage
 
-First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and \underline{public-private key pair} as exactly show below:
+First, download clone the repository, and give to install.sh and initiate.sh the appropriate permissions `chmod a+x` and generate and public-private key pair as exactly show below:
 
 ```bash
 git clone https://github.com/sceptic30/terraform-gke-cluster.git
@@ -61,4 +61,4 @@ Watch the whole process of provisioning in the [Demo Video](https://www.youtube.
 
 ## Cluster Requirements
 
-The recommended cpu-memory requirements is \underline{4 cores with 4Gb of RAM per node\underline{.
+The recommended cpu-memory requirements is 4 cores with 4Gb of RAM per node.
